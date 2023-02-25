@@ -43,4 +43,39 @@ CHIP ALU {
 
     PARTS:
    // Put you code here:
+
+   // zero the x input
+   Mux16(a=x, b=false, sel=zx, out=zeroedX);
+
+   // negate the x input
+   Not16(in=zeroedX, out=notX);
+   Mux16(a=zeroedX, b=notX, sel=nx, out=negatedX);
+
+   // zero the y input
+   Mux16(a=y, b=false, sel=zy, out=zeroedY);
+
+   // negate the y input
+   Not16(in=zeroedY, out=notY);
+   Mux16(a=zeroedY, b=notY, sel=ny, out=negatedY);
+
+   // choose function for output
+   Add16(a=negatedX, b=negatedY, out=addXY);
+   And16(a=negatedX, b=negatedY, out=andXY);
+   Mux16(a=andXY, b=addXY, sel=f, out=fXY);
+
+   // negate the output
+   Not16(in=fXY, out=notfXY);
+   // Multiple assignment to out allows splitting buses and saving output
+   // for later use. Consult the HDL Survival Guide.
+   Mux16(a=fXY, b=notfXY, sel=no, out[0..14]=lsbBits, out[15]=msbBit, 
+         out[0..7]=firstEightBits, out[8..15]=secondEightBits, out=out);
+
+   // is the output zero?
+   Or8Way(in=firstEightBits, out=firstEightZero);
+   Or8Way(in=secondEightBits, out=secondEightZero);
+   Or(a=firstEightZero, b=secondEightZero, out=outZero);
+   Not(in=outZero, out=zr);
+   
+   // is the output negative?
+   And(a=true, b=msbBit, out=ng);
 }
