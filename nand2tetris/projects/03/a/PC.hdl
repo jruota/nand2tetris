@@ -17,4 +17,17 @@ CHIP PC {
 
     PARTS:
     // Put your code here:
+
+    // The order of the Mux16 matters!
+    Mux16(a=regOut, b=incrementerOut, sel=inc, out=incOut);
+    Mux16(a=incOut, b=in, sel=load, out=loadOut);
+    Mux16(a=loadOut, b=false, sel=reset, out=resetOut);
+
+    Inc16(in=regOut, out=incrementerOut);
+
+    // Loading a new value, resetting and incrementing need to write a new
+    // value to the register.
+    Or(a=load, b=inc, out=or1);
+    Or(a=or1, b=reset, out=or2);
+    Register(in=resetOut, load=or2, out=regOut, out=out);
 }
