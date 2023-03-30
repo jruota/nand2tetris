@@ -15,8 +15,7 @@
     @counter
     M=0
 
-    // TODO: write directly to R2?
-    // initialize the product
+    // initialize product
     @R2
     M=0
 
