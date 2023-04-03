@@ -19,6 +19,14 @@ D=A
 @screenaddress
 M=D
 
+// create variable holding the last address of the screen map
+@SCREEN
+D=A
+@8191     // 256 rows * 32 rows of 16-bit words, subtract 1 (@SCREEN first addr)
+D=D+A
+@screenmapend 
+M=D
+
 // main loop
 (MAIN)
     @KBD
@@ -66,10 +74,8 @@ M=D
     // update screenaddress
     @screenaddress
     D=M+1
-    @SCREEN
-    D=D-A
-    @8191 // 256 rows * 32 rows of 16-bit words, subtract 1 (@SCREEN first addr)
-    D=D-A
+    @screenmapend
+    D=D-M
 
     // outside of screen map?
     @SETTOEND
@@ -93,10 +99,8 @@ M=D
     0;JMP
 
 (SETTOEND)
-    @SCREEN
-    D=A
-    @8191 // 256 rows * 32 rows of 16-bit words, subtract 1 (@SCREEN first addr)
-    D=D+A
+    @screenmapend
+    D=M
     @screenaddress
     M=D
 
