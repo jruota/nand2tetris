@@ -1,0 +1,67 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/01/Mux16.hdl
+
+/**
+ * 16-bit multiplexor: 
+ * for i = 0..15 out[i] = a[i] if sel == 0 
+ *                        b[i] if sel == 1
+ */
+
+CHIP Mux16 {
+    IN a[16], b[16], sel;
+    OUT out[16];
+
+    PARTS:
+    // Put your code here:
+    // (a AND NOT(sel)) OR (b AND sel)
+
+    // NOT(sel)
+    Nand (a=sel, b=sel, out=notsel); // negates sel
+
+    // (a AND NOT(sel))
+    Nand (a=notsel, b=a[0], out=asel0);
+    Nand (a=asel0, b=asel0, out=amulti0);
+
+    // (b AND sel)
+    Nand (a=sel, b=b[0], out=bsel0);
+    Nand (a=bsel0, b=bsel0, out=bmulti0);
+
+    // OR the previous two
+    Nand (a=amulti0, b=amulti0, out=notamulti0); // negates a
+    Nand (a=bmulti0, b=bmulti0, out=notbmulti0); // negates b
+    Nand (a=notamulti0, b=notbmulti0, out=out[0]);
+
+    Nand (a=notsel, b=a[1], out=asel1);
+    Nand (a=asel1, b=asel1, out=amulti1);
+    Nand (a=sel, b=b[1], out=bsel1);
+    Nand (a=bsel1, b=bsel1, out=bmulti1);
+    Nand (a=amulti1, b=amulti1, out=notamulti1);
+    Nand (a=bmulti1, b=bmulti1, out=notbmulti1);
+    Nand (a=notamulti1, b=notbmulti1, out=out[1]);
+
+    Nand (a=notsel, b=a[2], out=asel2);
+    Nand (a=asel2, b=asel2, out=amulti2);
+    Nand (a=sel, b=b[2], out=bsel2);
+    Nand (a=bsel2, b=bsel2, out=bmulti2);
+    Nand (a=amulti2, b=amulti2, out=notamulti2);
+    Nand (a=bmulti2, b=bmulti2, out=notbmulti2);
+    Nand (a=notamulti2, b=notbmulti2, out=out[2]);
+
+    // ...
+
+    Mux (a=a[3], b=b[3], sel=sel, out=out[3]);
+    Mux (a=a[4], b=b[4], sel=sel, out=out[4]);
+    Mux (a=a[5], b=b[5], sel=sel, out=out[5]);
+    Mux (a=a[6], b=b[6], sel=sel, out=out[6]);
+    Mux (a=a[7], b=b[7], sel=sel, out=out[7]);
+    Mux (a=a[8], b=b[8], sel=sel, out=out[8]);
+    Mux (a=a[9], b=b[9], sel=sel, out=out[9]);
+    Mux (a=a[10], b=b[10], sel=sel, out=out[10]);
+    Mux (a=a[11], b=b[11], sel=sel, out=out[11]);
+    Mux (a=a[12], b=b[12], sel=sel, out=out[12]);
+    Mux (a=a[13], b=b[13], sel=sel, out=out[13]);
+    Mux (a=a[14], b=b[14], sel=sel, out=out[14]);
+    Mux (a=a[15], b=b[15], sel=sel, out=out[15]);
+}
