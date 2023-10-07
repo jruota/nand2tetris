@@ -15,7 +15,9 @@ CHIP Mux {
 
     PARTS:
     // Put your code here:
-    // (a AND NOT(sel)) OR (b AND sel)
+
+    // ---------------------------------------------------
+    /* // (a AND NOT(sel)) OR (b AND sel)
 
     // NOT(sel)
     Nand (a=sel, b=sel, out=notsel); // negates sel
@@ -31,5 +33,13 @@ CHIP Mux {
     // OR the previous two
     Nand (a=amulti, b=amulti, out=notamulti); // negates a
     Nand (a=bmulti, b=bmulti, out=notbmulti); // negates b
-    Nand (a=notamulti, b=notbmulti, out=out);
+    Nand (a=notamulti, b=notbmulti, out=out); */
+    // ---------------------------------------------------
+
+    Not (in=sel, out=notsel);
+    And (a=a, b=notsel, out=sela);
+    
+    And (a=b, b=sel, out=selb);
+
+    Or (a=sela, b=selb, out=out);
 }

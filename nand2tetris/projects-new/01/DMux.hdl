@@ -15,12 +15,19 @@ CHIP DMux {
 
     PARTS:
     // Put your code here:
-    // [a] (NOT(sel) AND in)
+
+    // --------------------------------------------
+   /*  // [a] (NOT(sel) AND in)
     Nand (a=sel, b=sel, out=notsel); // negates sel
     Nand (a=notsel, b=in, out=aout);
     Nand (a=aout, b=aout, out=a);
 
     // [b] (sel AND in)
     Nand (a=sel, b=in, out=bout);
-    Nand (a=bout, b=bout, out=b);
+    Nand (a=bout, b=bout, out=b); */
+    // --------------------------------------------
+
+    Not (in=sel, out=notsel);
+    And (a=in, b=notsel, out=a);
+    And (a=in, b=sel, out=b);
 }

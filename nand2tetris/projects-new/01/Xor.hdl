@@ -14,7 +14,9 @@ CHIP Xor {
 
     PARTS:
     // Put your code here:
-    Nand (a=a, b=a, out=nota); // negates a
+    
+    // -------------------------------------------
+    /* Nand (a=a, b=a, out=nota); // negates a
     Nand (a=b, b=b, out=notb); // negates b
 
     Nand (a=a, b=b, out=out1);
@@ -24,5 +26,10 @@ CHIP Xor {
     Nand (a=out1, b=notout, out=out2);
 
     // negate the output of the previous Nand gate
-    Nand (a=out2, b=out2, out=out);
+    Nand (a=out2, b=out2, out=out); */
+    // -------------------------------------------
+
+    Or (a=a, b=b, out=aorb);
+    Nand (a=a, b=b, out=anandb);
+    And (a=aorb, b=anandb, out=out);
 }
