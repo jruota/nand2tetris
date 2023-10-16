@@ -68,8 +68,9 @@ CHIP ALU {
    Not16 (in=tempOut, out=negatedOut);
 
    // determine output
-   Mux16 (a=tempOut, b=negatedOut, sel=no, out[0..14]=lsbBits, out[15]=msbBit,
-          out[0..7]=firstEightBits, out[8..15]=secondEightBits, out=out);
+   Mux16 (a=tempOut, b=negatedOut, sel=no,
+          out[15]=msbBit, out[0..7]=firstEightBits, out[8..15]=secondEightBits, 
+          out=out);
 
    // zr
    Or8Way (in=firstEightBits, out=firstEightZero);
