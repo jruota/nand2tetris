@@ -1,0 +1,51 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/03/a/PC.hdl
+
+/**
+ * A 16-bit counter with load and reset control bits.
+ * if      (reset[t] == 1) out[t+1] = 0
+ * else if (load[t] == 1)  out[t+1] = in[t]
+ * else if (inc[t] == 1)   out[t+1] = out[t] + 1  (integer addition)
+ * else                    out[t+1] = out[t]
+ */
+
+CHIP PC {
+    IN in[16],load,inc,reset;
+    OUT out[16];
+
+    PARTS:
+    // Put your code here:
+    // Precedence: 1) reset, 2) load, 3) increment
+    Mux16(a=regOut, b=incOut, sel=inc, out=tempIncOut);
+    Mux16(a=tempIncOut, b=in, sel=load, out=loadOut);
+    Mux16(a=loadOut, b=false, sel=reset, out=resetOut);
+
+    Inc16(in=regOut, out=incOut);
+
+    // determine load for register
+    Or(a=load, b=inc, out=or1);
+    Or(a=or1, b=reset, out=or2);
+    Register(in=resetOut, load=or2, out=regOut, out=out);
+
+ /*    // should a value be loaded? (one of in, reset or increment)
+    Or(a=reset, b=inc, out=rOrI);
+    Or(a=rOrI, b=load, out=loadNewValue);
+
+    // choose between in and increment
+    Not(in=load, out=notLoad);
+    And(a=notLoad, b=inc, out=increment);
+    Not(in=increment, out=notIncrement);
+    Or(a=notIncrement, b=load, out=iOrL);
+    Mux16(a=outInc, b=in, sel=iOrL, out=incOrLoad);
+
+    // choose between incOrLoad and reset
+    Mux16(a=incOrLoad, b=false, sel=reset, out=newValue);
+
+    // choose between a new value and the previous value
+    Mux16(a=outReg, b=newValue, sel=loadNewValue, out=inReg);
+
+    Inc16(in=outReg, out=outInc);
+    Register(in=inReg, load=loadNewValue, out=outReg, out=out); */
+}
