@@ -28,4 +28,15 @@ CHIP Memory {
 
     PARTS:
     // Put your code here:
+    // routing the load bit
+    DMux(in=load, sel=address[14], a=loadMem, b=loadScreen);
+
+    RAM16K(in=in, load=loadMem, address=address[0..13], out=outMem);
+    Screen(in=in, load=loadScreen, address=address[0..12], out=outScreen);
+    Keyboard(out=outKbd);
+
+    // routing the output
+    Mux16(a=outMem, b=outScreen, sel=address[14], out=outMemOrScreen);
+    And(a=address[14], b=address[13], out=selKbd);
+    Mux16(a=outMemOrScreen, b=outKbd, sel=selKbd, out=out);
 }
