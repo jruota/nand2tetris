@@ -4,6 +4,7 @@
 #    versions of the assembler but are not part of project 6.
 
 import argparse
+import os
 
 def hack_assembler():
     # parse command line arguments
@@ -22,8 +23,17 @@ def hack_assembler():
     # open input file containing assembly instructions
     inputf = open(args.fp, 'r')
 
+    # open output file to write translated binary instructions
+    outputf = open(
+        os.path.dirname(args.fp) + 
+        "/" + 
+        os.path.basename(args.fp).split(".")[0] + 
+        ".hack",
+        "w")
+
     # close files
     inputf.close()
+    outputf.close()
     return
 
 ################################################################################
