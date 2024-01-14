@@ -4,6 +4,10 @@
 #   skipping comments and white space, and breaking each symbolic instruction
 #   into its underlying components.
 
+import os
+
+import hack_code
+
 def hack_parser(inputf):
     # constants
     A_INSTRUCTION = 0
@@ -25,8 +29,7 @@ def hack_parser(inputf):
             return A_INSTRUCTION
         if (line.startswith("(") and line.endswith(")")):
             return L_INSTRUCTION
-        else:
-            return C_INSTRUCTION
+        return C_INSTRUCTION
         
     def symbol():
         return line.strip("()@")
@@ -40,9 +43,7 @@ def hack_parser(inputf):
     
     def comp():
         c_instruction_parts = line.split("=")
-        # print("\tin comp() -> " + str(c_instruction_parts))
         if (len(c_instruction_parts) > 1):
-            # print("\tin comp() -> " + str(c_instruction_parts[1].split(";")[0]))
             return c_instruction_parts[1].split(";")[0]
         else:
             return c_instruction_parts[0].split(";")[0]
@@ -54,6 +55,11 @@ def hack_parser(inputf):
         else:
             return ""
  
+    # open output file to write translated binary instructions
+    outputf = open(
+        os.path.abspath(inputf.name).split(".")[0] + "1" + ".hack",
+        "w")
+
     # loop over input file
     for line in inputf:
         # remove (inline) comments
@@ -68,22 +74,34 @@ def hack_parser(inputf):
         if (instruction_type == A_INSTRUCTION or 
             instruction_type == L_INSTRUCTION):
             instruction = symbol()
-            # print("symbol -> " + instruction)
+            if (instruction.isdecimal()):
+                outputf.write(
+                    "0" + 
+                    format(int(instruction), "015b") + 
+                    "\n")
         if (instruction_type == C_INSTRUCTION):
-            destination, computation, jump_to = dest(), comp(), jump()
-            # print("dest -> " + destination)
-            # print("comp -> " + computation)
-            # print("jump -> " + jump_to) 
+            computation, destination, jump_to = comp(), dest(), jump()
+            outputf.write(
+                "111" + 
+                hack_code.hack_code(computation, destination, jump_to) + 
+                "\n")
+
+    # close output file
+    outputf.close()
             
 ################################################################################
         
 if __name__ == "__main__":
+    print("ADD " + 10 * "-")
     hack_parser(open("./add/Add.asm", "r"))
     print()
+    print("MAXL " + 10 * "-")
     hack_parser(open("./max/MaxL.asm", "r"))
     print()
+    print("MAX " + 10 * "-")
     hack_parser(open("./max/Max.asm", "r"))
     print()
+    print("RECTL " + 10 * "-")
     hack_parser(open("./rect/RectL.asm", "r"))
     print()
     print("RECT " + 10 * "-")
