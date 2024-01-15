@@ -47,9 +47,11 @@ def hack_parser(inputf):
         return False
     
     def advance():
-        # This function has no use, as Python handles reading files with a for
-        # loop.
-        return
+        nonlocal line
+        # remove (inline) comments
+        line = line.split("//")[0]
+        # remove leading and trailing whitespace
+        line = line.strip()
     
     def instructionType():
         if (line.startswith("@")):
@@ -87,17 +89,28 @@ def hack_parser(inputf):
         os.path.abspath(inputf.name).split(".")[0] + "1" + ".hack",
         "w")
 
-    # loop over input file
+    # loop over input file - FIRST PASS
+    line_number = 0
+    print(symbol_table)
     for line in inputf:
-        # remove (inline) comments
-        line = line.split("//")[0]
-        # remove leading and trailing whitespace
-        line = line.strip()
+        advance()
         # ignore empty lines - comments have already been removed
         if (len(line) == 0):
             continue
 
         instruction_type = instructionType()
+        if (instruction_type == A_INSTRUCTION or
+            instruction_type == C_INSTRUCTION):
+            line_number += 1
+        elif (instruction_type == L_INSTRUCTION):
+            instruction = symbol()
+            symbol_table[instruction] = line_number
+    print(symbol_table)
+
+    # close output file
+    outputf.close()
+
+"""         instruction_type = instructionType()
         if (instruction_type == A_INSTRUCTION or 
             instruction_type == L_INSTRUCTION):
             instruction = symbol()
@@ -111,10 +124,7 @@ def hack_parser(inputf):
             outputf.write(
                 "111" + 
                 hack_code.hack_code(computation, destination, jump_to) + 
-                "\n")
-
-    # close output file
-    outputf.close()
+                "\n") """
             
 ################################################################################
         
