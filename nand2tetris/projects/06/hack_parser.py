@@ -14,6 +14,33 @@ def hack_parser(inputf):
     C_INSTRUCTION = 1
     L_INSTRUCTION = 2
 
+     # symbol table
+    symbol_table = {
+        "R0":           0,
+        "R1":           1,
+        "R2":           2,
+        "R3":           3,
+        "R4":           4,
+        "R5":           5,
+        "R6":           6,
+        "R7":           7,
+        "R8":           8,
+        "R9":           9,
+        "R10":         10,
+        "R11":         11,
+        "R12":         12,
+        "R13":         13,
+        "R014":        14,
+        "R015":        15,
+        "SP":           0,
+        "LCL":          1,
+        "ARG":          2,
+        "THIS":         3,
+        "THAT":         4,
+        "SCREEN":   16384,
+        "KBD":      24576,
+        }
+
     def hasMoreLines():
         # This function has no use, as Python handles reading files with a for
         # loop.
