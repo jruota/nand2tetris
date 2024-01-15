@@ -30,8 +30,8 @@ def hack_parser(inputf):
         "R11":         11,
         "R12":         12,
         "R13":         13,
-        "R014":        14,
-        "R015":        15,
+        "R14":         14,
+        "R15":         15,
         "SP":           0,
         "LCL":          1,
         "ARG":          2,
@@ -91,7 +91,6 @@ def hack_parser(inputf):
 
     # loop over input file - FIRST PASS
     line_number = 0
-    print(symbol_table)
     for line in inputf:
         advance()
         # ignore empty lines - comments have already been removed
@@ -105,26 +104,42 @@ def hack_parser(inputf):
         elif (instruction_type == L_INSTRUCTION):
             instruction = symbol()
             symbol_table[instruction] = line_number
-    print(symbol_table)
 
-    # close output file
-    outputf.close()
+    # loop over input file - SECOND PASS
+    variable_index = 16
+    inputf.seek(0)  # go back to the start of the file
+    for line in inputf:
+        advance()
+        if(len(line) == 0):
+            continue
 
-"""         instruction_type = instructionType()
-        if (instruction_type == A_INSTRUCTION or 
-            instruction_type == L_INSTRUCTION):
+        instruction_type = instructionType()
+        if (instruction_type == L_INSTRUCTION):
+            continue
+        elif (instruction_type == A_INSTRUCTION):
             instruction = symbol()
             if (instruction.isdecimal()):
                 outputf.write(
                     "0" + 
                     format(int(instruction), "015b") + 
                     "\n")
-        if (instruction_type == C_INSTRUCTION):
+            else:
+                if (not instruction in symbol_table):
+                    symbol_table[instruction] = variable_index
+                    variable_index += 1
+                outputf.write(
+                    "0" +
+                    format(int(symbol_table[instruction]), "015b") +
+                    "\n")
+        elif (instruction_type == C_INSTRUCTION):
             computation, destination, jump_to = comp(), dest(), jump()
             outputf.write(
                 "111" + 
                 hack_code.hack_code(computation, destination, jump_to) + 
-                "\n") """
+                "\n")
+
+    # close output file
+    outputf.close()
             
 ################################################################################
         
@@ -143,3 +158,9 @@ if __name__ == "__main__":
     print()
     print("RECT " + 10 * "-")
     hack_parser(open("./rect/Rect.asm", "r"))
+    print()
+    print("PONGL " + 10 * "-")
+    hack_parser(open("./pong/PongL.asm", "r"))
+    print()
+    print("PONG " + 10 * "-")
+    hack_parser(open("./pong/Pong.asm", "r"))
