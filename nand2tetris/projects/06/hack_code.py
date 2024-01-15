@@ -46,22 +46,14 @@ def hack_code(c, d, j):
         return a_bit + comp_binary
 
     def dest():
-        if (d == ""):
-            return "000"
-        if (d == "M"): 
-            return "001"
-        if (d == "D"):
-            return "010"
-        if (d == "DM"):
-            return "011"
-        if (d == "A"):
-            return "100"
-        if (d == "AM"):
-            return "101"
-        if (d == "AD"):
-            return "110"
-        if (d == "ADM"):
-            return "111"
+        dest_mcode = 0
+        if (d.find("M") >= 0):
+            dest_mcode += 1
+        if (d.find("D") >= 0):
+            dest_mcode += 2
+        if (d.find("A") >= 0):
+            dest_mcode += 4
+        return format(dest_mcode, "03b")
 
     def jump():
         if (j == ""):
